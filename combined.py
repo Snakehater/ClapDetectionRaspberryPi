@@ -88,6 +88,7 @@ while True:
         print(average/len(frames))
         if average/len(frames) > middleTrigger:
             print('peak: ' + str(average/len(frames)))
+            sleep(2)
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
