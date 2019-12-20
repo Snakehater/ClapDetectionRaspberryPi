@@ -275,8 +275,7 @@ def checkDoubleClap(frames):
                 # numFrames /= 2
 
                 # return checkClapEntireArr(numFrames, chans, frames)
-                print('end: ' + str(int((samp_rate/bigChunk)*record_secs)))
-                for ii in range(0,int((samp_rate/bigChunk)*record_secs)):
+                for ii in range(0, 50:
                     print(ii)
                     frames = []
                     streambigchunk.stop_stream()
@@ -291,7 +290,6 @@ def checkDoubleClap(frames):
                     if checkClap(frames):
                         return True
                         break
-                print('done')
 
     return False
 
