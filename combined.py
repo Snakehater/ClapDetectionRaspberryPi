@@ -26,9 +26,9 @@ form_1 = pyaudio.paInt16 # 16-bit resolution
 chans = 1 # 1 channel
 samp_rate = 48000 # 44.1kHz sampling rate
 chunk = 8192 # 2^12 samples for buffer is default, now set to 2^13 as the sampling rate is higher than normal
-record_secs = 3 # seconds to record
+record_secs = 1 # seconds to record
 dev_index = 2 # device index found by p.get_device_info_by_index(ii)
-wav_output_filename = 'test1.wav' # name of .wav file
+# wav_output_filename = 'test1.wav' # name of .wav file
 
 audio = pyaudio.PyAudio() # create pyaudio instantiation
 
@@ -55,7 +55,7 @@ print("recording")
 # frames = []
 # numFrames = 0
 # limit = Clap().checkLength*4
-
+#
 # loop through stream and append audio chunks to frame array
 # for ii in range(0,int((samp_rate/chunk)*record_secs)):
 #     data = stream.read(chunk)
@@ -108,6 +108,109 @@ def checkClap(frames):
 
     return False
 
+def checkEntireClap(numFrames, channels, frames):
+    waveArr = parseToFloat(numFrames, channels, frames)
+
+    smallChunk = 6
+    bigChunk = 20
+    startTrigger = 0.2
+    middleTrigger = 0.5
+    middleJump = 100
+    endTrigger = 0.4 # percentage
+    endJump = 2300
+
+    clap = False
+
+    for idx in range(len(waveArr)):
+        if idx+middleJump+endJump+bigChunk > len(waveArr):
+            break
+
+        f = abs(waveArr[idx])
+
+        average = 0.0
+        for i in range(smallChunk):
+            average += abs(waveArr[idx+i])
+        average /= smallChunk
+        if average > startTrigger:
+            #print('start ' + str(average))
+            average = 0.0
+            for i in range(idx+middleJump, idx+middleJump+bigChunk):
+                average += abs(waveArr[i])
+            average /= bigChunk
+            if average > middleTrigger:
+                #print('middle ' + str(average))
+                averagePeak = average
+                average = 0.0
+                for i in range(idx+middleJump+endJump, idx+middleJump+endJump+bigChunk):
+                    average += abs(waveArr[i])
+                average /= bigChunk
+                if average < averagePeak*endTrigger:
+                    #print('end ' + str(average))
+                    print("""it's a clap""")
+                    clap = True
+                    return True
+                    break
+    if clap is False:
+        #print("""it's not a clap""")
+        return False
+
+def checkDoubleClap(frames):
+    # print(frames)
+    average = 0
+    for f in frames:
+        average += abs(f)
+    print(average/len(frames))
+    if average/len(frames) > startTrigger:
+        print('\n\nstart: ' + str(average/len(frames)))
+        sleep(middleJumpTime)
+        frames = []
+        data = streambigchunk.read(bigChunk, exception_on_overflow = False)
+        frames.append(data)
+        frames = parseToFloat(bigChunk, chans, frames)
+        average = 0
+        for f in frames:
+            average += abs(f)
+        print(average/len(frames))
+        if average/len(frames) > middleTrigger:
+            print('peak: ' + str(average/len(frames)))
+            averagePeak = average
+            sleep(endJumpTime)
+            frames = []
+            data = streambigchunk.read(bigChunk, exception_on_overflow = False)
+            frames.append(data)
+            frames = parseToFloat(bigChunk, chans, frames)
+            average = 0
+            for f in frames:
+                average += abs(f)
+            print(average/len(frames))
+            if average < averagePeak*endTrigger:
+                print("""it's a clap""")
+                print('end: ' + str(average/len(frames)))
+
+                streambigchunk.stop_stream()
+                streambigchunk.close()
+
+                stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                                    input_device_index = dev_index,input = True, \
+                                    frames_per_buffer=chunk)
+
+                frames = []
+                numFrames = 0
+
+                #loop through stream and append audio chunks to frame array
+                print("searching for next clap within " + str(record_secs) + " seconds")
+                for ii in range(0,int((samp_rate/chunk)*record_secs)):
+                    data = stream.read(chunk)
+                    frames.append(data)
+                    numFrames += len(data)
+
+                stream.stop_stream()
+                stream.close()
+
+                return checkClapEntire(numFrames, chans, frames)
+
+    return False
+
 # run forever
 
 smallChunk = Clap().smallChunk
@@ -132,7 +235,7 @@ while True:
     frames.append(data)
     frames = parseToFloat(bigChunk, chans, frames)
     # threading.Thread(target=(lambda: checkClap(frames))).start()
-    if checkClap(frames):
+    if checkDoubleClap(frames):
         break
 
 
