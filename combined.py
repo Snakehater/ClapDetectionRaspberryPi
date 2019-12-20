@@ -120,7 +120,7 @@ def checkClap(frames):
 
 isDoubleClap = False
 
-def checkClapEntireArrLambda(waveArr):
+def checkClapEntireArrLambda(startIdx, steps, waveArr):
     global isDoubleClap
     smallChunk = 6
     bigChunk = 20
@@ -132,7 +132,7 @@ def checkClapEntireArrLambda(waveArr):
 
     clap = False
 
-    for idx in range(1, len(waveArr), 2):
+    for idx in range(startIdx, len(waveArr), steps):
         # print(idx)
         if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
@@ -177,9 +177,11 @@ def checkClapEntireArr(numFrames, channels, frames):
 
     clap = False
 
-    threading.Thread(target=(lambda: checkClapEntireArrLambda(waveArr))).start()
+    threading.Thread(target=(lambda: checkClapEntireArrLambda(1, 4, waveArr))).start()
+    threading.Thread(target=(lambda: checkClapEntireArrLambda(2, 4, waveArr))).start()
+    threading.Thread(target=(lambda: checkClapEntireArrLambda(3, 4, waveArr))).start()
 
-    for idx in range(0, len(waveArr), 2):
+    for idx in range(0, len(waveArr), 4):
         # print(idx)
         if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
