@@ -120,7 +120,7 @@ def checkClap(frames):
 
 isDoubleClap = False
 
-def checkClapEntireArrLambda(idx, waveArr):
+def checkClapEntireArrLambda(waveArr):
     global isDoubleClap
     smallChunk = 6
     bigChunk = 20
@@ -130,29 +130,38 @@ def checkClapEntireArrLambda(idx, waveArr):
     endTrigger = 0.4 # percentage
     endJump = 2300
 
-    f = abs(waveArr[idx])
+    clap = False
 
-    average = 0.0
-    for i in range(smallChunk):
-        average += abs(waveArr[idx+i])
-    average /= smallChunk
-    if average > startTrigger:
-        #print('start ' + str(average))
+    for idx in range(1, len(waveArr), 2):
+        # print(idx)
+        if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
+            break
+
+        f = abs(waveArr[idx])
+
         average = 0.0
-        for i in range(idx+middleJump, idx+middleJump+bigChunk):
-            average += abs(waveArr[i])
-        average /= bigChunk
-        if average > middleTrigger:
-            #print('middle ' + str(average))
-            averagePeak = average
+        for i in range(smallChunk):
+            average += abs(waveArr[idx+i])
+        average /= smallChunk
+        if average > startTrigger:
+            #print('start ' + str(average))
             average = 0.0
-            for i in range(idx+middleJump+endJump, idx+middleJump+endJump+bigChunk):
+            for i in range(idx+middleJump, idx+middleJump+bigChunk):
                 average += abs(waveArr[i])
             average /= bigChunk
-            if average < averagePeak*endTrigger:
-                #print('end ' + str(average))
-                print("""it's a clap""")
-                isDoubleClap = True
+            if average > middleTrigger:
+                #print('middle ' + str(average))
+                averagePeak = average
+                average = 0.0
+                for i in range(idx+middleJump+endJump, idx+middleJump+endJump+bigChunk):
+                    average += abs(waveArr[i])
+                average /= bigChunk
+                if average < averagePeak*endTrigger:
+                    #print('end ' + str(average))
+                    print("""it's a clap""")
+                    clap = True
+                    break
+                    isDoubleClap = True
 
 def checkClapEntireArr(numFrames, channels, frames):
     global isDoubleClap
@@ -168,12 +177,12 @@ def checkClapEntireArr(numFrames, channels, frames):
 
     clap = False
 
+    threading.Thread(target=(lambda: checkClapEntireArrLambda(waveArr))).start()
+
     for idx in range(0, len(waveArr), 2):
         # print(idx)
         if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
-
-        threading.Thread(target=(lambda: checkClapEntireArrLambda(idx+1, waveArr))).start()
 
         f = abs(waveArr[idx])
 
