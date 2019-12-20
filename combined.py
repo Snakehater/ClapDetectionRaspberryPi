@@ -121,6 +121,7 @@ def checkClap(frames):
 isDoubleClap = False
 
 def checkClapEntireArrLambda(idx, waveArr):
+    global isDoubleClap
     smallChunk = 6
     bigChunk = 20
     startTrigger = 0.2
@@ -154,6 +155,7 @@ def checkClapEntireArrLambda(idx, waveArr):
                 isDoubleClap = True
 
 def checkClapEntireArr(numFrames, channels, frames):
+    global isDoubleClap
     waveArr = parseToFloat(numFrames, channels, frames)
 
     smallChunk = 6
