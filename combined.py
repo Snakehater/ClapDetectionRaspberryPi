@@ -45,9 +45,9 @@ stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
 stream.stop_stream()
 stream.close()
 
-stream10 = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                    input_device_index = dev_index,input = True, \
-                    frames_per_buffer=10)
+# stream10 = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+#                     input_device_index = dev_index,input = True, \
+#                     frames_per_buffer=10)
 streambigchunk = audio.open(format = form_1,rate = samp_rate,channels = chans, \
                     input_device_index = dev_index,input = True, \
                     frames_per_buffer=Clap().bigChunk)
@@ -120,15 +120,15 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    data = stream10.read(10, exception_on_overflow = True)
+    data = streambigchunk.read(10, exception_on_overflow = True)
     frames.append(data)
     frames = parseToFloat(10, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
-stream10.stop_stream()
-stream10.close()
+streambigchunk.stop_stream()
+streambigchunk.close()
 audio.terminate()
 
 #print(str(frames[0]))
