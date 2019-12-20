@@ -2,6 +2,7 @@ import pyaudio
 import wave
 import struct
 from time import sleep
+import threading
 
 class Clap():
     checkLength = 0
@@ -53,25 +54,7 @@ def parseToFloat(numFrames, channels, framesIn):
     a = struct.unpack("%ih" % (numFrames* channels), frames)
     a = [float(val) / pow(2, 15) for val in a]
     return a
-
-# run forever
-
-smallChunk = Clap().smallChunk
-bigChunk = Clap().bigChunk
-startTrigger = Clap().startTrigger
-middleTrigger = Clap().middleTrigger
-middleJump = Clap().middleJump
-middleJumpTime = Clap().middleJumpTime
-endTrigger = Clap().endTrigger # percentage
-endJump = Clap().endJump
-endJumpTime = Clap().endJumpTime
-checkLength = middleJump+endJump+bigChunk
-
-while True:
-    frames = []
-    data = stream.read(smallChunk, exception_on_overflow = False)
-    frames.append(data)
-    frames = parseToFloat(smallChunk, chans, frames)
+def checkClap(frames):
     average = 0
     for f in frames:
         average += abs(f)
@@ -101,6 +84,26 @@ while True:
             if average < averagePeak*endTrigger:
                 print("""it's a clap""")
                 print('end: ' + str(average/len(frames)))
+
+# run forever
+
+smallChunk = Clap().smallChunk
+bigChunk = Clap().bigChunk
+startTrigger = Clap().startTrigger
+middleTrigger = Clap().middleTrigger
+middleJump = Clap().middleJump
+middleJumpTime = Clap().middleJumpTime
+endTrigger = Clap().endTrigger # percentage
+endJump = Clap().endJump
+endJumpTime = Clap().endJumpTime
+checkLength = middleJump+endJump+bigChunk
+
+while True:
+    frames = []
+    data = stream.read(smallChunk, exception_on_overflow = False)
+    frames.append(data)
+    frames = parseToFloat(smallChunk, chans, frames)
+    threading.Thread(target=(lambda: checkClap(frames))).start()
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
