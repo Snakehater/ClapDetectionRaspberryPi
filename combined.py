@@ -10,10 +10,9 @@ def toggleLights():
     try:
             requests.get('https://elvigo.com/vigor/servers/lightscontrol/togglelights.php')
     except Exception as e:
-           #print("Internet connection not established")
-           #print(e)
+            print("Internet connection not established")
+            print(e)
            #print('\n\n\n')
-           pass
 
 smallChunk = 6
 bigChunk = 20
@@ -42,7 +41,7 @@ audio = pyaudio.PyAudio() # create pyaudio instantiation
 
 print('####################################################\n\n\n\n')
 for x in range(0,audio.get_device_count()):
-   #print(audio.get_device_info_by_index(x))
+   print(audio.get_device_info_by_index(x))
 print('\n\n\n\n####################################################')
 
 # create pyaudio stream
@@ -211,7 +210,7 @@ def checkClapEntireArr(numFrames, channels, frames):
                 average /= bigChunk
                 if average < averagePeak*endTrigger:
                     #print('end ' + str(average))
-                   print("""it's a clap""")
+                    print("""it's a clap""")
                     clap = True
                     return True
                     break
@@ -253,7 +252,7 @@ def checkDoubleClap(frames):
                 average += abs(f)
            #print(average/len(frames))
             if average < averagePeak*endTrigger:
-               #print("""it's a clap""")
+                print("""it's a clap""")
                #print('end: ' + str(average/len(frames)))
 
                 streambigchunk.stop_stream()
@@ -267,7 +266,7 @@ def checkDoubleClap(frames):
                 # numFrames = 0
                 #
                 # #loop through stream and append audio chunks to frame array
-                ##print("searching for next clap within " + str(record_secs) + " seconds")
+                print("searching for next clap")
                 # for ii in range(0,int((samp_rate/chunk)*record_secs)):
                 #     data = stream.read(chunk)
                 #     frames.append(data)
@@ -293,6 +292,7 @@ def checkDoubleClap(frames):
                     if checkClap(frames):
                         return True
                         break
+                print('end')
 
     return False
 
