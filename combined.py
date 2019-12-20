@@ -9,7 +9,7 @@ def toggleLights():
     try:
             requests.get('https://elvigo.com/vigor/servers/lightscontrol/togglelights.php')
     except:
-            print "Internet connection not established"
+            print("Internet connection not established")
 
 class Clap():
     checkLength = 0
