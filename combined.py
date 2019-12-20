@@ -118,6 +118,41 @@ def checkClap(frames):
 
     return False
 
+isDoubleClap = False
+
+def checkClapEntireArrLambda(idx, waveArr):
+    smallChunk = 6
+    bigChunk = 20
+    startTrigger = 0.2
+    middleTrigger = 0.5
+    middleJump = 100
+    endTrigger = 0.4 # percentage
+    endJump = 2300
+
+    f = abs(waveArr[idx])
+
+    average = 0.0
+    for i in range(smallChunk):
+        average += abs(waveArr[idx+i])
+    average /= smallChunk
+    if average > startTrigger:
+        #print('start ' + str(average))
+        average = 0.0
+        for i in range(idx+middleJump, idx+middleJump+bigChunk):
+            average += abs(waveArr[i])
+        average /= bigChunk
+        if average > middleTrigger:
+            #print('middle ' + str(average))
+            averagePeak = average
+            average = 0.0
+            for i in range(idx+middleJump+endJump, idx+middleJump+endJump+bigChunk):
+                average += abs(waveArr[i])
+            average /= bigChunk
+            if average < averagePeak*endTrigger:
+                #print('end ' + str(average))
+                print("""it's a clap""")
+                isDoubleClap = True
+
 def checkClapEntireArr(numFrames, channels, frames):
     waveArr = parseToFloat(numFrames, channels, frames)
 
@@ -131,9 +166,11 @@ def checkClapEntireArr(numFrames, channels, frames):
 
     clap = False
 
-    for idx in range(len(waveArr)):
-        if idx+middleJump+endJump+bigChunk > len(waveArr):
+    for idx in range(len(waveArr), 2):
+        if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
+
+        threading.Thread(target=(lambda: checkClapEntireArrLambda(idx+1, waveArr)).start()
 
         f = abs(waveArr[idx])
 
@@ -160,6 +197,8 @@ def checkClapEntireArr(numFrames, channels, frames):
                     clap = True
                     return True
                     break
+    if isDoubleClap is True:
+        return True
     if clap is False:
         #print("""it's not a clap""")
         return False
