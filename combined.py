@@ -34,7 +34,7 @@ audio = pyaudio.PyAudio() # create pyaudio instantiation
 
 print('####################################################\n\n\n\n')
 for x in xrange(0,audio.get_device_count()):
-    print audio.get_device_info_by_index(x)
+    print(audio.get_device_info_by_index(x))
 print('####################################################\n\n\n\n')
 
 # create pyaudio stream
