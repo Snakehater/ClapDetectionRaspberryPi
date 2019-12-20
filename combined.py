@@ -32,6 +32,11 @@ wav_output_filename = 'test1.wav' # name of .wav file
 
 audio = pyaudio.PyAudio() # create pyaudio instantiation
 
+print('####################################################\n\n\n\n')
+for x in xrange(0,audio.get_device_count()):
+    print audio.get_device_info_by_index(x)
+print('####################################################\n\n\n\n')
+
 # create pyaudio stream
 stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
                     input_device_index = dev_index,input = True, \
