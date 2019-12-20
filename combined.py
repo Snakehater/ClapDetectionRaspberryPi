@@ -8,7 +8,7 @@ class Clap():
     checkLength = 0
     def __init__(self):
         self.smallChunk = 6
-        self.bigChunk = 1024 #20
+        self.bigChunk = 20
         self.startTrigger = 0.2
         self.middleTrigger = 0.5
         self.middleJump = 100
@@ -50,7 +50,7 @@ stream.close()
 #                     frames_per_buffer=10)
 streambigchunk = audio.open(format = form_1,rate = samp_rate,channels = chans, \
                     input_device_index = dev_index,input = True, \
-                    frames_per_buffer=Clap().bigChunk)
+                    frames_per_buffer=20)
 print("recording")
 # frames = []
 # numFrames = 0
@@ -120,7 +120,7 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    data = streambigchunk.read(bigChunk, exception_on_overflow = True)
+    data = streambigchunk.read(20, exception_on_overflow = True)
     frames.append(data)
     frames = parseToFloat(bigChunk, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
