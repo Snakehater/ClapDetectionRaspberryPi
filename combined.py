@@ -62,6 +62,7 @@ def checkClap(frames):
     average = 0
     for f in frames:
         average += abs(f)
+    print(average/len(frames))
     if average/len(frames) > startTrigger:
         print('\n\nstart: ' + str(average/len(frames)))
         sleep(middleJumpTime)
