@@ -8,7 +8,7 @@ class Clap():
     checkLength = 0
     def __init__(self):
         self.smallChunk = 6
-        self.bigChunk = 20
+        self.bigChunk = 1024 #20
         self.startTrigger = 0.2
         self.middleTrigger = 0.5
         self.middleJump = 100
@@ -35,7 +35,7 @@ audio = pyaudio.PyAudio() # create pyaudio instantiation
 print('####################################################\n\n\n\n')
 for x in range(0,audio.get_device_count()):
     print(audio.get_device_info_by_index(x))
-print('####################################################\n\n\n\n')
+print('\n\n\n\n####################################################')
 
 # create pyaudio stream
 stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
