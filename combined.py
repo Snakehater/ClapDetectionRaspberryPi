@@ -104,7 +104,7 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    data = stream.read(smallChunk, exception_on_overflow = False)
+    data = stream.read(50, exception_on_overflow = False)
     frames.append(data)
     frames = parseToFloat(smallChunk, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
