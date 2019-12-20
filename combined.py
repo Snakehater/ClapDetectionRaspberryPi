@@ -48,7 +48,10 @@ print("recording")
 #     numFrames += len(data)
 #
 # print("finished recording")
-
+def uptime():
+    with open('/proc/uptime', 'r') as f:
+        uptime_seconds = float(f.readline().split()[0])
+        return uptime_seconds
 def parseToFloat(numFrames, channels, framesIn):
     frames = b''.join(framesIn)
     a = struct.unpack("%ih" % (numFrames* channels), frames)
@@ -100,7 +103,9 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
+    print(uptime())
     data = stream.read(smallChunk, exception_on_overflow = False)
+    print(uptime())
     frames.append(data)
     frames = parseToFloat(smallChunk, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
