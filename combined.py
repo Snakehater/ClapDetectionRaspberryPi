@@ -76,19 +76,31 @@ while True:
     for f in frames:
         average += abs(f)
     if average/len(frames) > startTrigger:
-        print('start: ' + str(average/len(frames)))
+        print('\n\nstart: ' + str(average/len(frames)))
         sleep(middleJumpTime)
         frames = []
-        data = stream.read(smallChunk, exception_on_overflow = False)
+        data = stream.read(bigChunk, exception_on_overflow = False)
         frames.append(data)
-        frames = parseToFloat(smallChunk, chans, frames)
+        frames = parseToFloat(bigChunk, chans, frames)
         average = 0
         for f in frames:
             average += abs(f)
         print(average/len(frames))
         if average/len(frames) > middleTrigger:
             print('peak: ' + str(average/len(frames)))
-            sleep(2)
+            averagePeak = average
+            sleep(endJumpTime)
+            frames = []
+            data = stream.read(bigChunk, exception_on_overflow = False)
+            frames.append(data)
+            frames = parseToFloat(bigChunk, chans, frames)
+            average = 0
+            for f in frames:
+                average += abs(f)
+            print(average/len(frames))
+            if average < averagePeak*endTrigger:
+                print("""it's a clap""")
+                print('end: ' + str(average/len(frames)))
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
