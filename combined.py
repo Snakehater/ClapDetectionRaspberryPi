@@ -106,7 +106,7 @@ while True:
     frames = []
     data = stream.read(50, exception_on_overflow = False)
     frames.append(data)
-    frames = parseToFloat(smallChunk, chans, frames)
+    frames = parseToFloat(50, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
 
 
