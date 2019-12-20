@@ -170,7 +170,7 @@ def checkClapEntireArr(numFrames, channels, frames):
         if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
 
-        threading.Thread(target=(lambda: checkClapEntireArrLambda(idx+1, waveArr)).start()
+        threading.Thread(target=(lambda: checkClapEntireArrLambda(idx+1, waveArr))).start()
 
         f = abs(waveArr[idx])
 
