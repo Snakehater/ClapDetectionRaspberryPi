@@ -58,7 +58,7 @@ def parseToFloat(numFrames, channels, framesIn):
     a = [float(val) / pow(2, 15) for val in a]
     return a
 def checkClap(frames):
-    print(frames)
+    # print(frames)
     average = 0
     for f in frames:
         average += abs(f)
