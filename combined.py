@@ -254,26 +254,41 @@ def checkDoubleClap(frames):
                 streambigchunk.stop_stream()
                 streambigchunk.close()
 
-                stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                                    input_device_index = dev_index,input = True, \
-                                    frames_per_buffer=chunk)
+                # stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                #                     input_device_index = dev_index,input = True, \
+                #                     frames_per_buffer=chunk)
+                #
+                # frames = []
+                # numFrames = 0
+                #
+                # #loop through stream and append audio chunks to frame array
+                # print("searching for next clap within " + str(record_secs) + " seconds")
+                # for ii in range(0,int((samp_rate/chunk)*record_secs)):
+                #     data = stream.read(chunk)
+                #     frames.append(data)
+                #     numFrames += len(data)
+                #
+                # stream.stop_stream()
+                # stream.close()
+                #
+                # numFrames /= 2
 
-                frames = []
-                numFrames = 0
+                # return checkClapEntireArr(numFrames, chans, frames)
 
-                #loop through stream and append audio chunks to frame array
-                print("searching for next clap within " + str(record_secs) + " seconds")
-                for ii in range(0,int((samp_rate/chunk)*record_secs)):
-                    data = stream.read(chunk)
+                for ii in range(0,int((samp_rate/bigChunk)*record_secs)):
+                    frames = []
+                    streambigchunk.stop_stream()
+                    streambigchunk.close()
+                    streambigchunk = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                                        input_device_index = dev_index,input = True, \
+                                        frames_per_buffer=Clap().bigChunk)
+                    data = streambigchunk.read(bigChunk, exception_on_overflow = True)
                     frames.append(data)
-                    numFrames += len(data)
-
-                stream.stop_stream()
-                stream.close()
-
-                numFrames /= 2
-
-                return checkClapEntireArr(numFrames, chans, frames)
+                    frames = parseToFloat(bigChunk, chans, frames)
+                    # threading.Thread(target=(lambda: checkClap(frames))).start()
+                    if checkClap(frames):
+                        return True
+                        break
 
     return False
 
