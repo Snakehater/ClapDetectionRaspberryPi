@@ -251,6 +251,8 @@ def checkDoubleClap(frames):
                 print("""it's a clap""")
                 print('end: ' + str(average/len(frames)))
 
+                global streambigchunk
+
                 streambigchunk.stop_stream()
                 streambigchunk.close()
 
