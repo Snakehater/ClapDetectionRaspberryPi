@@ -291,6 +291,7 @@ def checkDoubleClap(frames):
                     if checkClap(frames):
                         return True
                         break
+                print('done')
 
     return False
 
