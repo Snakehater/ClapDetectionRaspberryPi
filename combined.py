@@ -69,7 +69,9 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
+    print('start')
     data = stream.read(smallChunk, exception_on_overflow = False)
+    print('stop')
     frames.append(data)
     frames = parseToFloat(smallChunk, chans, frames)
     average = 0
