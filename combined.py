@@ -122,10 +122,10 @@ while True:
     frames = []
     data = streambigchunk.read(bigChunk, exception_on_overflow = True)
     streambigchunk.stop_stream()
-    streambigchunk.close()
-    streambigchunk = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                        input_device_index = dev_index,input = True, \
-                        frames_per_buffer=Clap().bigChunk)
+    streambigchunk.start_stream()
+    # streambigchunk = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+    #                     input_device_index = dev_index,input = True, \
+    #                     frames_per_buffer=Clap().bigChunk)
     frames.append(data)
     frames = parseToFloat(bigChunk, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
