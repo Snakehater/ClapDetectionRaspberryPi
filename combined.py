@@ -108,7 +108,7 @@ def checkClap(frames):
 
     return False
 
-def checkEntireClap(numFrames, channels, frames):
+def checkClapEntireArr(numFrames, channels, frames):
     waveArr = parseToFloat(numFrames, channels, frames)
 
     smallChunk = 6
@@ -207,7 +207,7 @@ def checkDoubleClap(frames):
                 stream.stop_stream()
                 stream.close()
 
-                return checkClapEntire(numFrames, chans, frames)
+                return checkClapEntireArr(numFrames, chans, frames)
 
     return False
 
