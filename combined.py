@@ -4,6 +4,13 @@ import struct
 from time import sleep
 import threading
 
+def toggleLights():
+    print('toggle lights')
+    try:
+            requests.get('https://elvigo.com/vigor/servers/lightscontrol/togglelights.php')
+    except:
+            print "Internet connection not established"
+
 class Clap():
     checkLength = 0
     def __init__(self):
@@ -238,7 +245,7 @@ while True:
     frames = parseToFloat(bigChunk, chans, frames)
     # threading.Thread(target=(lambda: checkClap(frames))).start()
     if checkDoubleClap(frames):
-        break
+        toggleLights()
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
