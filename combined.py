@@ -1,6 +1,7 @@
 import pyaudio
 import wave
 import struct
+from time import sleep
 
 class Clap():
     checkLength = 0
@@ -10,8 +11,10 @@ class Clap():
         self.startTrigger = 0.2
         self.middleTrigger = 0.5
         self.middleJump = 100
+        self.middleJumpTime = 0.003
         self.endTrigger = 0.4 # percentage
         self.endJump = 2300
+        self.endJumpTime = 0.045
         self.checkLength = self.middleJump+self.endJump+self.bigChunk
 
 #pa = pyaudio.PyAudio()
@@ -53,12 +56,34 @@ def parseToFloat(numFrames, channels, framesIn):
 
 # run forever
 
+smallChunk = Clap().smallChunk
+bigChunk = Clap().bigChunk
+startTrigger = Clap().startTrigger
+middleTrigger = Clap().middleTrigger
+middleJump = Clap().middleJump
+middleJumpTime = Clap().middleJumpTime
+endTrigger = Clap().endTrigger # percentage
+endJump = Clap().endJump
+endJumpTime = Clap().endJumpTime
+checkLength = middleJump+endJump+bigChunk
+
 while True:
     frames = []
-    data = stream.read(10, exception_on_overflow = False)
+    data = stream.read(smallChunk, exception_on_overflow = False)
     frames.append(data)
-    frames = parseToFloat(10, chans, frames)
-    print(frames)
+    frames = parseToFloat(smallChunk, chans, frames)
+    average = 0
+    for f in frames:
+        average += abs(f)
+    if average/len(frames) > startTrigger:
+        sleep(middleJumpTime)
+        frames = []
+        data = stream.read(smallChunk, exception_on_overflow = False)
+        frames.append(data)
+        frames = parseToFloat(smallChunk, chans, frames)
+        average = 0
+        for f in frames:
+            average += abs(f)
 
 # stop the stream, close it, and terminate the pyaudio instantiation
 stream.stop_stream()
