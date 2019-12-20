@@ -87,7 +87,7 @@ def checkClap(frames):
     average = 0
     for f in frames:
         average += abs(f)
-    print(average/len(frames))
+    #print(average/len(frames))
     if average/len(frames) > startTrigger:
         print('\n\nstart: ' + str(average/len(frames)))
         sleep(middleJumpTime)
@@ -167,6 +167,7 @@ def checkClapEntireArr(numFrames, channels, frames):
     clap = False
 
     for idx in range(len(waveArr), 2):
+        print(idx)
         if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
 
@@ -199,6 +200,7 @@ def checkClapEntireArr(numFrames, channels, frames):
                     break
     if isDoubleClap is True:
         return True
+        isDoubleClap = False
     if clap is False:
         #print("""it's not a clap""")
         return False
