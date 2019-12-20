@@ -13,6 +13,7 @@ def toggleLights():
            #print("Internet connection not established")
            #print(e)
            #print('\n\n\n')
+           pass
 
 smallChunk = 6
 bigChunk = 20
