@@ -105,10 +105,13 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    data = stream.read(1024, exception_on_overflow = False)
-    frames.append(data)
-    frames = parseToFloat(1024, chans, frames)
-    threading.Thread(target=(lambda: checkClap(frames))).start()
+    try:
+        data = stream.read(1024, exception_on_overflow = True)
+        frames.append(data)
+        frames = parseToFloat(1024, chans, frames)
+        threading.Thread(target=(lambda: checkClap(frames))).start()
+    except Exception as e:
+        print(e)
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
