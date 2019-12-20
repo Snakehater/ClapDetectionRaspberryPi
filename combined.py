@@ -3,6 +3,7 @@ import wave
 import struct
 from time import sleep
 import threading
+import requests
 
 def toggleLights():
     print('toggle lights')
