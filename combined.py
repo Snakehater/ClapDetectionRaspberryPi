@@ -104,6 +104,9 @@ def checkClap(frames):
             if average < averagePeak*endTrigger:
                 print("""it's a clap""")
                 print('end: ' + str(average/len(frames)))
+                return True
+
+    return False
 
 # run forever
 
@@ -129,7 +132,8 @@ while True:
     frames.append(data)
     frames = parseToFloat(bigChunk, chans, frames)
     # threading.Thread(target=(lambda: checkClap(frames))).start()
-    checkClap(frames)
+    if checkClap(frames):
+        break
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
