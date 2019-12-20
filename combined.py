@@ -58,6 +58,7 @@ def parseToFloat(numFrames, channels, framesIn):
     a = [float(val) / pow(2, 15) for val in a]
     return a
 def checkClap(frames):
+    print(frames)
     average = 0
     for f in frames:
         average += abs(f)
@@ -103,9 +104,7 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    print(uptime())
     data = stream.read(smallChunk, exception_on_overflow = False)
-    print(uptime())
     frames.append(data)
     frames = parseToFloat(smallChunk, chans, frames)
     threading.Thread(target=(lambda: checkClap(frames))).start()
