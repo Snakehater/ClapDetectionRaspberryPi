@@ -14,7 +14,7 @@ class Clap():
         self.middleJumpTime = 0.003
         self.endTrigger = 0.4 # percentage
         self.endJump = 2300
-        self.endJumpTime = 0.045
+        self.endJumpTime = 0.085
         self.checkLength = self.middleJump+self.endJump+self.bigChunk
 
 #pa = pyaudio.PyAudio()
@@ -69,9 +69,7 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    print('start')
     data = stream.read(smallChunk, exception_on_overflow = False)
-    print('stop')
     frames.append(data)
     frames = parseToFloat(smallChunk, chans, frames)
     average = 0
