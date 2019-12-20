@@ -128,7 +128,8 @@ while True:
     data = streambigchunk.read(bigChunk, exception_on_overflow = True)
     frames.append(data)
     frames = parseToFloat(bigChunk, chans, frames)
-    threading.Thread(target=(lambda: checkClap(frames))).start()
+    # threading.Thread(target=(lambda: checkClap(frames))).start()
+    checkClap(frames)
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
