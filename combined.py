@@ -76,7 +76,7 @@ while True:
     for f in frames:
         average += abs(f)
     if average/len(frames) > startTrigger:
-        print('start: ' + str(average))
+        print('start: ' + str(average/len(frames)))
         sleep(middleJumpTime)
         frames = []
         data = stream.read(smallChunk, exception_on_overflow = False)
@@ -87,7 +87,7 @@ while True:
             average += abs(f)
         print(average/len(frames))
         if average/len(frames) > middleTrigger:
-            print('peak: ' + str(average))
+            print('peak: ' + str(average/len(frames)))
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
