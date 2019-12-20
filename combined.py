@@ -207,6 +207,8 @@ def checkDoubleClap(frames):
                 stream.stop_stream()
                 stream.close()
 
+                numFrames /= 2
+
                 return checkClapEntireArr(numFrames, chans, frames)
 
     return False
