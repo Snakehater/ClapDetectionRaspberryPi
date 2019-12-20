@@ -219,6 +219,7 @@ def checkClapEntireArr(numFrames, channels, frames):
         return False
 
 def checkDoubleClap(frames):
+    global streambigchunk
     # print(frames)
     average = 0
     for f in frames:
