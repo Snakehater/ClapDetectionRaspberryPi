@@ -35,7 +35,17 @@ audio = pyaudio.PyAudio() # create pyaudio instantiation
 # create pyaudio stream
 stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
                     input_device_index = dev_index,input = True, \
-                    frames_per_buffer=chunk)
+                    frames_per_buffer=chunk
+
+stream.stop_stream()
+stream.close()
+
+stream10 = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                    input_device_index = dev_index,input = True, \
+                    frames_per_buffer=10)
+streambigchunk = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                    input_device_index = dev_index,input = True, \
+                    frames_per_buffer=Clap().bigChunk)
 print("recording")
 # frames = []
 # numFrames = 0
@@ -67,7 +77,7 @@ def checkClap(frames):
         print('\n\nstart: ' + str(average/len(frames)))
         sleep(middleJumpTime)
         frames = []
-        data = stream.read(bigChunk, exception_on_overflow = False)
+        data = streambigchunk.read(bigChunk, exception_on_overflow = False)
         frames.append(data)
         frames = parseToFloat(bigChunk, chans, frames)
         average = 0
@@ -79,7 +89,7 @@ def checkClap(frames):
             averagePeak = average
             sleep(endJumpTime)
             frames = []
-            data = stream.read(bigChunk, exception_on_overflow = False)
+            data = streambigchunk.read(bigChunk, exception_on_overflow = False)
             frames.append(data)
             frames = parseToFloat(bigChunk, chans, frames)
             average = 0
@@ -105,18 +115,15 @@ checkLength = middleJump+endJump+bigChunk
 
 while True:
     frames = []
-    try:
-        data = stream.read(1024, exception_on_overflow = True)
-        frames.append(data)
-        frames = parseToFloat(1024, chans, frames)
-        threading.Thread(target=(lambda: checkClap(frames))).start()
-    except Exception as e:
-        print(e)
+    data = stream10.read(10, exception_on_overflow = True)
+    frames.append(data)
+    frames = parseToFloat(10, chans, frames)
+    threading.Thread(target=(lambda: checkClap(frames))).start()
 
 
 # stop the stream, close it, and terminate the pyaudio instantiation
-stream.stop_stream()
-stream.close()
+stream10.stop_stream()
+stream10.close()
 audio.terminate()
 
 #print(str(frames[0]))
