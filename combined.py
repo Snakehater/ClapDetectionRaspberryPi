@@ -168,8 +168,8 @@ def checkClapEntireArr(numFrames, channels, frames):
 
     clap = False
 
-    for idx in range(len(waveArr)):
-        print(idx)
+    for idx in range(0, len(waveArr), 2):
+        # print(idx)
         if idx+middleJump+endJump+bigChunk > len(waveArr) or isDoubleClap is True:
             break
 
